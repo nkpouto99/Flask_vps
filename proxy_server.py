@@ -17,6 +17,8 @@ last_updated = time.time()
 
 def log_proxy(ip):
     """Log each used proxy to a memory."""
+    global proxy_log_list
+    
     if len(proxy_log_list) >= 50:  
         proxy_log_list.pop(0)  # Remove oldest log if more than 50
     proxy_log_list.append(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {ip}")
@@ -34,6 +36,7 @@ def get_proxy():
     if time.time() - last_updated > 120:
         current_ip = generate_random_ip()
         last_updated = time.time()
+        log_proxy(current_ip)
 
     return jsonify({"proxy": f"http://{current_ip}:8080"})  # ✅ Fake Proxy
 
