@@ -4,6 +4,7 @@ import time
 import threading
 
 app = Flask(__name__)
+PROXY_LOG_FILE = "proxy_logs.txt"
 
 # Generate a list of fake IPs
 def generate_random_ip():
@@ -12,6 +13,11 @@ def generate_random_ip():
 # Store the current IP and reset every 3 minutes
 current_ip = generate_random_ip()
 last_updated = time.time()
+
+def log_proxy(ip):
+    """Log each used proxy to a file."""
+    with open(PROXY_LOG_FILE, "a") as file:
+        file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {ip}\n")
 
 @app.route('/')
 def home():
@@ -28,6 +34,16 @@ def get_proxy():
         last_updated = time.time()
 
     return jsonify({"proxy": f"http://{current_ip}:8080"})  # ✅ Fake Proxy
+
+@app.route('/proxy-logs')
+def proxy_logs():
+    """Show the last 20 used proxies."""
+    try:
+        with open(PROXY_LOG_FILE, "r") as file:
+            logs = file.readlines()[-20:]  # Show only last 20 logs
+        return "<br>".join(logs)
+    except FileNotFoundError:
+        return "No logs available."
 
 def run_fake_task():
     """Runs in the background to simulate real app activity."""
