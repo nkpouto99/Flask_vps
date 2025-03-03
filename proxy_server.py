@@ -29,7 +29,7 @@ def get_proxy():
     """Returns a fake proxy IP that rotates every 3 minutes."""
     global current_ip, last_updated
 
-    if time.time() - last_updated > 180:
+    if time.time() - last_updated > 120:
         current_ip = generate_random_ip()
         last_updated = time.time()
 
@@ -49,7 +49,7 @@ def run_fake_task():
     """Runs in the background to simulate real app activity."""
     while True:
         print("🔄 Background task running... (Render won't stop this app)")
-        time.sleep(300)  # Keep Render thinking it's active
+        time.sleep(180)  # Keep Render thinking it's active
 
 if __name__ == '__main__':
     threading.Thread(target=run_fake_task, daemon=True).start()  # ✅ Start fake background process
