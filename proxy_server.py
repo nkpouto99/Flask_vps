@@ -52,13 +52,11 @@ def run_fake_task():
         time.sleep(30)  # Keep Render thinking it's active
 
 if __name__ == '__main__':
+    print("Starting fake task now")
+    run_fake_task()
     flask_vps = threading.Thread(
         target=app.run,
         kwargs={"host": "0.0.0.0", "port": 10000, "threaded": True},  # ✅ Disable reloader
         daemon=True
     )
     flask_vps.start()
-    
-    time.sleep(5)
-    print("Starting fake task now")
-    run_fake_task()
