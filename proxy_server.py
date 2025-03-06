@@ -49,8 +49,16 @@ def run_fake_task():
     """Runs in the background to simulate real app activity."""
     while True:
         print("🔄 Background task running... (Render won't stop this app)")
-        time.sleep(180)  # Keep Render thinking it's active
+        time.sleep(30)  # Keep Render thinking it's active
 
 if __name__ == '__main__':
-    threading.Thread(target=run_fake_task, daemon=True).start()  # ✅ Start fake background process
-    app.run(host='0.0.0.0', port=10000, threaded=True)  # ✅ Run Flask on Render's required port
+    flask_vps = threading.Thread(
+        target=app.run,
+        kwargs={"host": "0.0.0.0", "port": 10000, "threaded": True},  # ✅ Disable reloader
+        daemon=True
+    )
+    flask_vps.start()
+    
+    time.sleep(5)
+    print("Starting fake task now")
+    run_fake_task()
