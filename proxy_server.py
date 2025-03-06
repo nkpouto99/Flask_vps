@@ -28,6 +28,11 @@ def home():
     """Fake home route to trick Render into thinking this is a normal app."""
     return "✅ Proxy Server is Running!"
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for Render to verify service is running."""
+    return jsonify({"status": "healthy"}), 200
+
 @app.route('/get_proxy')
 def get_proxy():
     """Returns a fake proxy IP that rotates every 3 minutes."""
